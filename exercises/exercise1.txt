@@ -1,0 +1,109 @@
+irb(main):015> Brewery.create name:"BrewDog", year:2007
+  TRANSACTION (0.2ms)  begin transaction
+  Brewery Create (2.4ms)  INSERT INTO "breweries" ("name", "year", "created_at", "updated_at") VALUES (?, ?, ?, ?)  [["name", "BrewDog"], ["year", 2007], ["created_at", "2023-10-10 14:19:04.320715"], ["updated_at", "2023-10-10 14:19:04.320715"]]
+  TRANSACTION (3.5ms)  commit transaction
+=>
+#<Brewery:0x00007f8ed2593680
+ id: 5,
+ name: "BrewDog",
+ year: 2007,
+ created_at: Tue, 10 Oct 2023 14:19:04.320715000 UTC +00:00,
+ updated_at: Tue, 10 Oct 2023 14:19:04.320715000 UTC +00:00>
+irb(main):016> Brewery.all
+  Brewery Load (0.5ms)  SELECT "breweries".* FROM "breweries"
+=>
+[#<Brewery:0x00007f8ed213c320
+  id: 1,
+  name: "Koff",
+  year: 1897,
+  created_at: Sun, 08 Oct 2023 14:17:48.914622000 UTC +00:00,
+  updated_at: Sun, 08 Oct 2023 14:17:48.914622000 UTC +00:00>,
+ #<Brewery:0x00007f8ed213c1e0
+  id: 2,
+  name: "Malmgard",
+  year: 2001,
+  created_at: Sun, 08 Oct 2023 14:17:48.929212000 UTC +00:00,
+  updated_at: Sun, 08 Oct 2023 14:17:48.929212000 UTC +00:00>,
+ #<Brewery:0x00007f8ed213c0a0
+  id: 3,
+  name: "Weihenstephaner",
+  year: 1040,
+  created_at: Sun, 08 Oct 2023 14:17:48.942884000 UTC +00:00,
+  updated_at: Sun, 08 Oct 2023 14:17:48.942884000 UTC +00:00>,
+ #<Brewery:0x00007f8ed213bf60
+  id: 5,
+  name: "BrewDog",
+  year: 2007,
+  created_at: Tue, 10 Oct 2023 14:19:04.320715000 UTC +00:00,
+  updated_at: Tue, 10 Oct 2023 14:19:04.320715000 UTC +00:00>]
+irb(main):017> b = Brewery.find_by id:5
+  Brewery Load (0.7ms)  SELECT "breweries".* FROM "breweries" WHERE "breweries"."id" = ? LIMIT ?  [["id", 5], ["LIMIT", 1]]
+=>
+#<Brewery:0x00007f8ed223a010
+...
+irb(main):018> b.beers.create(name:"Punk IPA", style:"IPA")
+  TRANSACTION (0.1ms)  begin transaction
+  Beer Create (2.3ms)  INSERT INTO "beers" ("name", "style", "brewery_id", "created_at", "updated_at") VALUES (?, ?, ?, ?, ?)  [["name", "Punk IPA"], ["style", "IPA"], ["brewery_id", 5], ["created_at", "2023-10-10 14:20:41.349853"], ["updated_at", "2023-10-10 14:20:41.349853"]]
+  TRANSACTION (3.1ms)  commit transaction
+=>
+#<Beer:0x00007f8ed2187820
+ id: 13,
+ name: "Punk IPA",
+ style: "IPA",
+ brewery_id: 5,
+ created_at: Tue, 10 Oct 2023 14:20:41.349853000 UTC +00:00,
+ updated_at: Tue, 10 Oct 2023 14:20:41.349853000 UTC +00:00>
+irb(main):019> b.beers.create(name:"Nanny State", style:"lowalcohol")
+  TRANSACTION (0.1ms)  begin transaction
+  Beer Create (2.0ms)  INSERT INTO "beers" ("name", "style", "brewery_id", "created_at", "updated_at") VALUES (?, ?, ?, ?, ?)  [["name", "Nanny State"], ["style", "lowalcohol"], ["brewery_id", 5], ["created_at", "2023-10-10 14:21:03.924974"], ["updated_at", "2023-10-10 14:21:03.924974"]]
+  TRANSACTION (3.7ms)  commit transaction
+=>
+#<Beer:0x00007f8ed223eed0
+ id: 14,
+ name: "Nanny State",
+ style: "lowalcohol",
+ brewery_id: 5,
+ created_at: Tue, 10 Oct 2023 14:21:03.924974000 UTC +00:00,
+ updated_at: Tue, 10 Oct 2023 14:21:03.924974000 UTC +00:00>
+irb(main):020> Beer.find_by(id:13).ratings.create score:35
+  Beer Load (0.7ms)  SELECT "beers".* FROM "beers" WHERE "beers"."id" = ? LIMIT ?  [["id", 13], ["LIMIT", 1]]
+  TRANSACTION (0.1ms)  begin transaction
+  Rating Create (1.9ms)  INSERT INTO "ratings" ("score", "beer_id", "created_at", "updated_at") VALUES (?, ?, ?, ?)  [["score", 35], ["beer_id", 13], ["created_at", "2023-10-10 14:24:20.235646"], ["updated_at", "2023-10-10 14:24:20.235646"]]
+  TRANSACTION (4.8ms)  commit transaction
+=>
+#<Rating:0x00007f8ed2180520
+ id: 4,
+ score: 35,
+ beer_id: 13,
+ created_at: Tue, 10 Oct 2023 14:24:20.235646000 UTC +00:00,
+ updated_at: Tue, 10 Oct 2023 14:24:20.235646000 UTC +00:00>
+irb(main):021> Beer.find_by(id:14).ratings.create score:6
+  Beer Load (0.5ms)  SELECT "beers".* FROM "beers" WHERE "beers"."id" = ? LIMIT ?  [["id", 14], ["LIMIT", 1]]
+  TRANSACTION (0.1ms)  begin transaction
+  Rating Create (2.0ms)  INSERT INTO "ratings" ("score", "beer_id", "created_at", "updated_at") VALUES (?, ?, ?, ?)  [["score", 6], ["beer_id", 14], ["created_at", "2023-10-10 14:24:40.802438"], ["updated_at", "2023-10-10 14:24:40.802438"]]
+  TRANSACTION (3.5ms)  commit transaction
+=>
+#<Rating:0x00007f8ed21e3990
+ id: 5,
+ score: 6,
+ beer_id: 14,
+ created_at: Tue, 10 Oct 2023 14:24:40.802438000 UTC +00:00,
+ updated_at: Tue, 10 Oct 2023 14:24:40.802438000 UTC +00:00>
+irb(main):022> Beer.find_by(id:14).ratings.create score:12
+  Beer Load (0.6ms)  SELECT "beers".* FROM "beers" WHERE "beers"."id" = ? LIMIT ?  [["id", 14], ["LIMIT", 1]]
+  TRANSACTION (0.1ms)  begin transaction
+  Rating Create (2.7ms)  INSERT INTO "ratings" ("score", "beer_id", "created_at", "updated_at") VALUES (?, ?, ?, ?)  [["score", 12], ["beer_id", 14], ["created_at", "2023-10-10 14:24:52.967240"], ["updated_at", "2023-10-10 14:24:52.967240"]]
+  TRANSACTION (4.6ms)  commit transaction
+=>
+#<Rating:0x00007f8ed2208ad8
+ id: 6,
+ score: 12,
+ beer_id: 14,
+ created_at: Tue, 10 Oct 2023 14:24:52.967240000 UTC +00:00,
+ updated_at: Tue, 10 Oct 2023 14:24:52.967240000 UTC +00:00>
+irb(main):023> Beer.find_by(id:13).ratings.create score:19
+  Beer Load (0.5ms)  SELECT "beers".* FROM "beers" WHERE "beers"."id" = ? LIMIT ?  [["id", 13], ["LIMIT", 1]]
+  TRANSACTION (0.2ms)  begin transaction
+  Rating Create (2.0ms)  INSERT INTO "ratings" ("score", "beer_id", "created_at", "updated_at") VALUES (?, ?, ?, ?)  [["score", 19], ["beer_id", 13], ["created_at", "2023-10-10 14:24:57.212170"], ["updated_at", "2023-10-10 14:24:57.212170"]]
+  TRANSACTION (4.8ms)  commit transaction
+=>
