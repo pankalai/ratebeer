@@ -1,17 +1,15 @@
 <div id="<%= dom_id beer %>">
   <p>
+    <div>
     <strong>Name:</strong>
-	<%=link_to beer.name, beer %>
-  </p>
-
-  <p>
+	  <%=link_to beer.name, beer %>
+    </div>
+    <div>
     <strong>Style:</strong>
     <%= beer.style %>
-  </p>
-
-  <p>
+    </div>
     <strong>Brewery:</strong>
-	<%=link_to beer.brewery.name, beer.brewery %>
+	  <%=link_to beer.brewery.name, beer.brewery %>
   </p>
   
   <% if beer.ratings.empty? %>

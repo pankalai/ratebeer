@@ -1,0 +1,21 @@
+<div id="<%= dom_id user %>">
+  <p>
+    <h2>Username:</h2>
+    <p><%= user.username %></p>
+    <p>Has made <%= pluralize(user.ratings.count,'rating') %>, average rating <%= user.average_rating %></p>
+    <strong>Ratings</strong>
+    <ul>
+      <% user.ratings.each do |rating| %>
+        <li> 
+          <%= rating %> 
+          <% if @user == current_user %>
+            <%= link_to "Delete", rating, data: {"turbo_method": :delete, "turbo_confirm": 'Are you sure?'} %>
+          <% end %>
+        </li>
+      <% end %>
+    </ul>
+    <strong>Clubs:</strong>
+    <%= user.beer_clubs.map { |c| c.name }.join(", ") %>
+  </p>
+
+</div>
