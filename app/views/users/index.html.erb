@@ -6,9 +6,6 @@
   
  
   <% @users.each do |user| %>
-     <!--
-    <%= render user %>
-     -->
     <h2>Username:</h2>
     <p><strong><%= user.username %></strong></p>
     <div>Has made <%= pluralize(user.ratings.count,'rating') %>, average rating <%= user.average_rating %></div>

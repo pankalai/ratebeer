@@ -18,6 +18,8 @@
 </div>
 <br>
 <p>
-	<%= link_to "New brewery", new_brewery_path %> | 
+	<% if current_user %>
+		<%=link_to("New brewery", new_brewery_path)%> | 
+	<% end %>
 	<%=link_to 'List of beers', beers_path %>
 </p>

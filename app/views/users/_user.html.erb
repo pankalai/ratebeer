@@ -14,6 +14,14 @@
         </li>
       <% end %>
     </ul>
+    <p>
+      <strong>Favorite style:</strong>
+      <%= user.favorite_style %>
+    </p>
+    <p>
+      <strong>Favorite brewery:</strong>
+      <%= user.favorite_brewery %>
+    </p>
     <strong>Clubs:</strong>
     <%= user.beer_clubs.map { |c| c.name }.join(", ") %>
   </p>

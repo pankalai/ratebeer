@@ -6,6 +6,7 @@ class Beer < ApplicationRecord
   has_many :raters, through: :ratings, source: :user
 
   validates :name, length: { minimum: 1 }
+  validates :style, length: { minimum: 1 }
 
   # def average_rating3
   #   (self.ratings.sum(:score)/self.ratings.count).to_f
