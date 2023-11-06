@@ -6,7 +6,7 @@
     </div>
     <div>
     <strong>Style:</strong>
-    <%= beer.style %>
+    <%= beer.style.name unless beer.style.nil? %>
     </div>
     <strong>Brewery:</strong>
 	  <%=link_to beer.brewery.name, beer.brewery %>

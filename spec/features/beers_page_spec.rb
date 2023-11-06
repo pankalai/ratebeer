@@ -5,12 +5,13 @@ describe "Beer page" do
 		FactoryBot.create :user
 		sign_in(username: "Pekka", password: "Foobar1")
 		FactoryBot.create :brewery
+		FactoryBot.create :style
 		visit new_beer_path
 	end
 	
 	it "allows to add a valid beer" do
 		fill_in('beer_name', with: 'Brian')
-		select('IPA', from: 'beer[style]')
+		select('lager', from: 'beer[style_id]')
 		select('anonymous', from: 'beer[brewery_id]')
 		
 		expect{
@@ -20,7 +21,7 @@ describe "Beer page" do
 	
 	it "is redirected back to new beer form if invalid beer name given" do
 		fill_in('beer_name', with: '')
-		select('IPA', from: 'beer[style]')
+		select('lager', from: 'beer[style_id]')
 		select('anonymous', from: 'beer[brewery_id]')
 		
 		expect{

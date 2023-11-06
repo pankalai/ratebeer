@@ -88,6 +88,7 @@ RSpec.describe User, type: :model do
 	
 	describe "favorite style" do
 		let(:user){ FactoryBot.create(:user) }
+		let(:style) {FactoryBot.create :style}
 
 		it "has method for determining one" do
 			expect(user).to respond_to(:favorite_style)
@@ -98,7 +99,6 @@ RSpec.describe User, type: :model do
 		end
 
 		it "is the only rated if only one rating" do
-			style = "Lager"
 			beer = FactoryBot.create(:beer, style: style)
 			rating = FactoryBot.create(:rating, score: 20, beer: beer, user: user)
 
@@ -106,10 +106,10 @@ RSpec.describe User, type: :model do
 		end
 		
 		it "is the one with highest average if several rated" do
-		  create_beers_with_many_ratings({user: user, style: "style1"}, 10, 20)
-		  create_beers_with_many_ratings({user: user, style: "style2"}, 20, 30)
-		  create_beers_with_many_ratings({user: user, style: "style3"}, 30, 40)
-		  b_style = "style4"
+		  create_beers_with_many_ratings({user: user, style: style}, 10, 20)
+		  create_beers_with_many_ratings({user: user, style: style}, 20, 30)
+		  create_beers_with_many_ratings({user: user, style: style}, 30, 40)
+		  b_style = FactoryBot.create(:style, name: "style1")
 		  create_beer_with_rating({user: user, style: b_style}, 45 )
 		  expect(user.favorite_style).to eq(b_style)
 		end

@@ -1,0 +1,9 @@
+<p style="color: green"><%= notice %></p>
+
+<%= render @style %>
+
+<div>
+  <%= link_to "Edit this style | ", edit_style_path(@style) %>
+  <%= link_to "Back to styles", styles_path %>
+  <%= button_to "Destroy this brewery", @style, method: :delete if current_user %>
+</div>

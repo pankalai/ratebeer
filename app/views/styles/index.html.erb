@@ -1,0 +1,12 @@
+<p style="color: green"><%= notice %></p>
+<h2>List of styles</h2>
+Number of styles: <%= @styles.count %> 
+<ul>
+  <% @styles.order(:name).each do |style| %>
+    <li> 
+      <%= link_to style.name, style %>
+    </li>
+  <% end %>
+</ul>
+
+<%= link_to "New style", styles_new_path %>

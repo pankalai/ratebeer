@@ -1,7 +1,7 @@
 <div id="<%= dom_id user %>">
   <p>
     <h2>Username:</h2>
-    <p><%= user.username %></p>
+    <%= user.username %>
     <p>Has made <%= pluralize(user.ratings.count,'rating') %>, average rating <%= user.average_rating %></p>
     <strong>Ratings</strong>
     <ul>
@@ -16,14 +16,14 @@
     </ul>
     <p>
       <strong>Favorite style:</strong>
-      <%= user.favorite_style %>
+      <%= user.favorite_style.name unless user.favorite_style.nil? %>
     </p>
     <p>
       <strong>Favorite brewery:</strong>
       <%= user.favorite_brewery %>
     </p>
-    <strong>Clubs:</strong>
-    <%= user.beer_clubs.map { |c| c.name }.join(", ") %>
-  </p>
+      <strong>Clubs:</strong>
+      <%= user.beer_clubs.map { |c| c.name }.join(", ") %>
+    </p>
 
 </div>

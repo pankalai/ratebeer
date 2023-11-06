@@ -15,10 +15,10 @@
   </p>
  
   <p>
-    <strong>Members:</strong><br>
-
+    <strong>Members:</strong>
       <% beer_club.members.each do |m| %>
-        <%= m.username %><br>
+        <br>
+        <%= link_to m.username, m %>
       <% end %>
 
   </p>

@@ -1,0 +1,37 @@
+<h1>Beer places search</h1>
+
+<p style="color: red"><%= notice %></p>
+
+<%= form_with url: places_path, method: :post do |form| %>
+  city <%= form.text_field :city %>
+  <%= form.submit "Search" %>
+<% end %>
+<br>
+<% if @weather %>
+  <div>
+  <strong>The current beer weather in <%= session[:city] %></strong>
+  <p><%= @weather.temperature unless @weather.temperature.nil? %> Celsius</p>
+  <p><%= image_tag(@weather.weather_icons.first) unless @weather.weather_icons.nil? %> </p>
+  <p><strong>Wind </strong><%= "#{@weather.wind_speed}, direction: #{@weather.wind_dir}" unless @weather.wind_speed.nil? %></p>
+  </div>
+<% end %>
+<% if @places %>
+  <table>
+    <thead>
+      <% Place.rendered_fields.each do |field| %>
+        <th><%= field %></th>
+      <% end %>
+    </thead>
+    <% @places.each do |place| %>
+      <tr>
+        <% Place.rendered_fields.each do |field| %>
+          <% if field == :name %>
+          <td> <%=link_to place.name, place_path(place.id) %></td>
+          <% else %>
+          <td><%= place.send(field) %></td>
+          <% end %>
+        <% end %>
+      </tr>
+    <% end %>
+  </table>
+<% end %>
