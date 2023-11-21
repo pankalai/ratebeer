@@ -19,4 +19,11 @@ Rails.application.routes.draw do
   resource :session, only: [:new, :create, :destroy]
   resources :places, only: [:index, :show]
   #resources :styles, only: [:index, :show, :create, :edit, :update]
+  resources :breweries do
+    post 'toggle_activity', on: :member
+  end
+
+  resources :users do
+    post 'toggle_closure', on: :member
+  end
 end

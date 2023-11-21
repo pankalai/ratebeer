@@ -42,6 +42,10 @@ class StylesController < ApplicationController
   end
 
   def destroy
+    if !admin_user
+      return redirect_to style_url(@style), notice: "Destroy possible only for admin."
+    end
+
     @style.destroy
 
     respond_to do |format|

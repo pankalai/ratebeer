@@ -1,11 +1,11 @@
 class BreweriesController < ApplicationController
   before_action :set_brewery, only: %i[show edit update destroy]
-  # before_action :authenticate, only: [:destroy]
   before_action :ensure_that_signed_in, except: [:index, :show]
 
   # GET /breweries or /breweries.json
   def index
-    @breweries = Brewery.all
+    @active_breweries = Brewery.active
+    @retired_breweries = Brewery.retired
   end
 
   # GET /breweries/1 or /breweries/1.json
@@ -51,12 +51,25 @@ class BreweriesController < ApplicationController
 
   # DELETE /breweries/1 or /breweries/1.json
   def destroy
+    if !admin_user
+      return redirect_to brewery_url(@brewery), notice: "Destroy possible only for admin."
+    end
+
     @brewery.destroy
 
     respond_to do |format|
       format.html { redirect_to breweries_url, notice: "Brewery was successfully destroyed." }
       format.json { head :no_content }
     end
+  end
+
+  def toggle_activity
+    brewery = Brewery.find(params[:id])
+    brewery.update_attribute :active, !brewery.active
+
+    new_status = brewery.active? ? "active" : "retired"
+
+    redirect_to brewery, notice: "brewery activity status changed to #{new_status}"
   end
 
   private
@@ -68,7 +81,7 @@ class BreweriesController < ApplicationController
 
   # Only allow a list of trusted parameters through.
   def brewery_params
-    params.require(:brewery).permit(:name, :year)
+    params.require(:brewery).permit(:name, :year, :active)
   end
 
   # def authenticate

@@ -3,9 +3,7 @@ class UsersController < ApplicationController
 
   # GET /users or /users.json
   def index
-    puts "alku", @users
     @users = User.all
-    puts "loppu", @users
   end
 
   # GET /users/1 or /users/1.json
@@ -27,7 +25,9 @@ class UsersController < ApplicationController
 
     respond_to do |format|
       if @user.save
-        format.html { redirect_to user_url(@user), notice: "User was successfully created." }
+        session[:user_id] = @user.id
+        # format.html { redirect_to user_url(@user), notice: "User was successfully created." }
+        format.html { redirect_to user_path(@user), notice: "User was successfully created." }
         format.json { render :show, status: :created, location: @user }
       else
         format.html { render :new, status: :unprocessable_entity }
@@ -60,6 +60,15 @@ class UsersController < ApplicationController
       # format.html { redirect_to controller: :sessions, action: :destroy, notice: "User was successfully destroyed." }
       format.json { head :no_content }
     end
+  end
+
+  def toggle_closure
+    user = User.find(params[:id])
+    user.update_attribute :closed, !user.closed
+
+    new_status = user.closed? ? "closed" : "active"
+
+    redirect_to user, notice: "user's status changed to #{new_status}"
   end
 
   private

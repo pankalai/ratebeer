@@ -1,0 +1,12 @@
+<div class="row border-bottom">
+    <div class="col-8"><strong><%= rat.first.class.name %></strong></div>
+    <div class="col-4"><strong>Average</strong></div>
+</div>
+<% rat.each do |rating| %>
+    <div class="row border-bottom">
+        <div class="col-8"><%= rating.name %></div> 
+        <div class="col-4"><%= round(rating.average_rating) %></div>
+    </div>
+<% end %>
+
+    

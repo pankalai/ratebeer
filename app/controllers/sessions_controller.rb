@@ -6,6 +6,11 @@ class SessionsController < ApplicationController
   def create
     # Haetaan usernamea vastaava käyttäjä tietokannasta
     user = User.find_by username: params[:username]
+
+    if user.closed
+      return redirect_to signin_path, notice: "Your account is closed, please contact with admin"
+    end
+
     # Talletetaan sessioon kirjautuneen käyttäjän id (jos käyttäjä on olemassa)
     if user&.authenticate(params[:password])
       session[:user_id] = user.id

@@ -53,6 +53,10 @@ class BeerClubsController < ApplicationController
 
   # DELETE /beer_clubs/1 or /beer_clubs/1.json
   def destroy
+    if !admin_user
+      return redirect_to beer_club_url(@beer_club), notice: "Destroy possible only for admin."
+    end
+
     @beer_club.destroy
 
     respond_to do |format|

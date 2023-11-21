@@ -1,5 +1,6 @@
 class Beer < ApplicationRecord
   include RatingAverage
+
   belongs_to :style
   belongs_to :brewery
   has_many :ratings, dependent: :destroy
@@ -27,8 +28,12 @@ class Beer < ApplicationRecord
   end
 
   def average
-    return 0 if ratings.empty?
+    return 0.0 if ratings.empty?
 
     ratings.map(&:score).sum / ratings.count.to_f
+  end
+
+  def self.top(amount)
+    Beer.all.sort_by(&:average_rating).reverse.first(amount)
   end
 end

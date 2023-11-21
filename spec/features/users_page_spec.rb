@@ -15,7 +15,7 @@ describe "User" do
       expect(page).to have_content 'Pekka'
     end
 	
-  it "is redirected back to signin form if wrong credentials given" do
+  	it "is redirected back to signin form if wrong credentials given" do
 	  sign_in(username: "Pekka", password: "wrong")
 
 	  expect(current_path).to eq(signin_path)

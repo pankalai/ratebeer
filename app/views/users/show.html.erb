@@ -1,14 +1,26 @@
-<p style="color: green"><%= notice %></p>
 
+<p>
 <%= render @user %> 
+</p>
+ <br>
 
-<div>
-  <% if @user == current_user %>
-    <%= link_to "Edit this user", edit_user_path(@user) %> |
+<p>
+  <% if admin_user %>
+    <%= link_to "#{@user.closed ? "Open account" : "Close account" }", toggle_closure_user_path(@user.id), data: {turbo_method: "post"}, class: "btn btn-danger" %>
   <% end %>
+</p>
+
+<p>
+  <% if @user == current_user %>
+    <%= link_to "Edit", edit_user_path(@user), class:'btn btn-primary' %> 
+  <% end %>
+  <% if admin_user %>
+    <%= link_to "Destroy this user", @user, class:'btn btn-danger', method: :delete %>
+  <% end %>
+</p>
+
+<p>
   <%= link_to "Back to users", users_path %>
+</p>
 
-  <% if @user == current_user %>
-    <%= button_to "Destroy this user", @user, method: :delete %>
-  <% end %>
-</div>
+

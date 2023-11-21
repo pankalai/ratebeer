@@ -51,6 +51,10 @@ gem "bootsnap", require: false
 
 gem 'httparty'
 
+gem 'bootstrap', '~> 5.2.0'
+gem 'bootstrap_form'
+gem 'jquery-rails'
+gem 'mini_racer'
 
 group :development, :test do
   # See https://guides.rubyonrails.org/debugging_rails_applications.html#debugging-with-the-debug-gem

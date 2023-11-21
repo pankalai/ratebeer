@@ -1,29 +1,44 @@
 <div id="<%= dom_id user %>">
+
   <p>
-    <h2>Username:</h2>
-    <%= user.username %>
-    <p>Has made <%= pluralize(user.ratings.count,'rating') %>, average rating <%= user.average_rating %></p>
-    <strong>Ratings</strong>
-    <ul>
-      <% user.ratings.each do |rating| %>
-        <li> 
-          <%= rating %> 
-          <% if @user == current_user %>
-            <%= link_to "Delete", rating, data: {"turbo_method": :delete, "turbo_confirm": 'Are you sure?'} %>
-          <% end %>
-        </li>
+    <h2>User:</h2>
+    <% if admin_user %>
+      <% if user.closed %>
+        <p><span class="badge bg-primary">closed</span></p>
       <% end %>
-    </ul>
-    <p>
-      <strong>Favorite style:</strong>
-      <%= user.favorite_style.name unless user.favorite_style.nil? %>
-    </p>
-    <p>
-      <strong>Favorite brewery:</strong>
-      <%= user.favorite_brewery %>
-    </p>
-      <strong>Clubs:</strong>
-      <%= user.beer_clubs.map { |c| c.name }.join(", ") %>
-    </p>
+    <% end %>
+    <strong><%= @user.username %></strong>
+    <p>Has made <%= pluralize(user.ratings.count,'rating') %>, average rating <%= user.average_rating %></p>
+  </p>
+
+  
+
+  <strong>Ratings</strong>
+  <ul>
+    <% user.ratings.each do |rating| %>
+      <li> 
+        <%= rating %> 
+        <% if @user == current_user %>
+          <%= link_to "Delete", rating, data: {"turbo_method": :delete, "turbo_confirm": 'Are you sure?'} %>
+        <% end %>
+      </li>
+    <% end %>
+  </ul>
+
+  <p>
+    <strong>Favorite style:</strong>
+    <%= user.favorite_style.name unless user.favorite_style.nil? %>
+  </p>
+  <p>
+    <strong>Favorite brewery:</strong>
+    <%= user.favorite_brewery.name unless user.favorite_brewery.nil? %>
+  </p>
+
+  <p>
+  <strong>Clubs:</strong>
+  <%= user.beer_clubs.map { |c| c.name }.join(", ") %>
+  </p>
+
+
 
 </div>

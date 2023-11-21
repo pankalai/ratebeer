@@ -20,22 +20,53 @@ class User < ApplicationRecord
   def favorite_beer
     return nil if ratings.empty?
 
-    # ratings.sort_by{ |r| r.score }.last.beer
-    # ratings.sort_by(&:score).last.beer
     ratings.order(score: :desc).limit(1).first.beer
   end
 
   def favorite_style
-    return nil if ratings.empty?
-
-    beers.group(:style).average(:score).sort_by(&:last).reverse.first.first
+    favorite(:style)
   end
 
   def favorite_brewery
+    favorite(:brewery)
+  end
+
+  def favorite(groupped_by)
     return nil if ratings.empty?
 
-    beers.group(:brewery).average(:score).sort_by(&:last).reverse.first.first.name
-    # best = beers.group(:brewery).average(:score).sort_by(&:last).reverse.first.second
-    # beers.group(:brewery).average(:score).sort_by(&:last).select{|e,t| t == best}.map{|row| row[0]}
+    grouped_ratings = ratings.group_by{ |r| r.beer.send(groupped_by) }
+    averages = grouped_ratings.map do |group, ratings|
+      { group:, score: average_of(ratings) }
+    end
+
+    averages.max_by{ |r| r[:score] }[:group]
   end
+
+  def average_of(ratings)
+    ratings.sum(&:score).to_f / ratings.count
+  end
+
+  def self.top(amount)
+    User.all.sort_by{ |u| u.ratings.count }.reverse.first(amount)
+  end
+
+  # def method_missing(method_name, *args, &block)
+  #   if method_name =~ /^favorite_/
+  #     category = method_name[9..-1].to_sym
+  #     self.favorite category
+  #   else
+  #     return super
+  #   end
+  # end
+
+  # def favorite_style
+  #   return nil if ratings.empty?
+
+  #   beers.group(:style).average(:score).sort_by(&:last).reverse.first.first
+  # end
+
+  # def favorite_brewery
+  #   return nil if ratings.empty?
+  #   beers.group(:brewery).average(:score).sort_by(&:last).reverse.first.first.name
+  # end
 end

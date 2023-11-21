@@ -1,12 +1,114 @@
-<h2>List of ratings</h2>
-Number of ratings: <%= @ratings.count %> 
-<ul>
-  <% @ratings.each do |rating| %>
-    <li> 
-      <%= rating %> 
-      <%= link_to rating.user.username, rating.user %>
-    </li>
-  <% end %>
-</ul>
+<h1>Ratings</h1>
+<br>
 
-<%= link_to "New rating", new_rating_path %>
+Number of ratings: <%= @ratings.count %>
+
+<p>
+<div class="container text-center">
+  <div class="row">
+
+    <div class="col-xl-3 col-lg-5 col-sm-8" style="margin: 1rem;">
+        <h3>Best beers</h3>
+        <%= render partial: 'rating', :locals => {:rat => @top_beers } %>
+    </div>
+
+    <div class="col-xl-3 col-lg-5 col-sm-8" style="margin: 1rem;">
+        <h3>Best breweries</h3>
+        <%= render partial: 'rating', :locals => {:rat => @top_breweries } %>
+    </div>
+
+    <div class="col-xl-3 col-lg-5 col-sm-8" style="margin: 1rem;">
+        <h3>Best styles</h3>
+        <%= render partial: 'rating', :locals => {:rat => @top_styles } %>
+    </div>
+
+  </div>
+</div>
+</p>
+
+<p>
+<h3>Most active users</h3>
+<ul>
+<% i = 1 %>
+<% @active_users.each do |user| %>
+  <%= "#{i}. " %><%= "#{user.username} " %><%= pluralize(user.ratings.count,"rating")%>
+  <% i += 1%>
+  <br>
+<% end %>
+</ul>
+</p>
+
+<p>
+<h3>Recent ratings</h3>
+<ul>
+<% @ratings.recent.each do |rating| %>
+  <li><%= rating %> <%= rating.created_at.strftime("%d-%m-%Y %H:%M") %></li>
+<% end %>
+</ul>
+</p>
+
+<p>
+<h3>All ratings</h3>
+
+<div class="container">
+  <div class="col-sm-12 col-md-11 col-xl-10">
+    <table class="table accordion table-striped table-hover">
+    <thead>
+      <tr>
+        <th>Beer</th>
+        <th>Ratings</th>
+        <th>Average</th>
+      </tr>
+    </thead>
+
+    <tbody>
+        <% i = 1%>
+        <% @beers.sort_by(&:average).reverse.each do |beer| %>
+          <tr data-bs-toggle="collapse" data-bs-target="#r<%= i %>" type="button">
+
+              <td><%= beer.name %></td>
+              <td><%= beer.ratings.count %></td>
+              <td><%= beer.average %></td>
+          </tr>
+
+            <tr class="collapse accordion-collapse" id="r<%= i %>" data-bs-parent=".table">
+              <td colspan=20>
+                 <div class="col-sm-12 col-md-11 col-xl-9">  
+                <table class="table">
+                  <thead>
+                    <tr>
+                      <th>User</th>
+                      <th>Score</th>
+                      <th>Time</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <% @ratings.joins(:user).where(beer_id: beer.id).select('users.username', :score, :'ratings.created_at').sort_by(&:created_at).reverse.each do |rating| %>
+                      <tr>
+                        <td class="col-5"><%= rating.username %></td>
+                        <td class="col-3"><%= rating.score %></td>
+                        <td class="col-4"><%= rating.created_at.strftime("%d-%m-%Y %H:%M") %></td>
+                      </tr>
+                    <% end %>
+                  </tbody>
+                </table>
+                </div>
+
+              </td>
+            </tr>
+          
+        <% i += 1%>
+        <% end %>
+        <tr>
+          <th>Total</th>
+          <th><%= @ratings.count %></th>
+          <th><%= @ratings.average(:score) %></th>
+        </tr>
+    </tbody>
+    </table>
+  </div>
+</div>
+</p>
+
+
+<%= link_to "New rating", new_rating_path, class:'btn btn-primary' %>

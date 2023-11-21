@@ -1,25 +1,61 @@
-<p style="color: green"><%= notice %></p>
+
 
 <h1>Breweries</h1>
 
-<p>Number of breweries: <%= @breweries.count %></p>
+<br>
 
-<div id="breweries">
-  <% @breweries.order(year: :desc).each do |brewery| %>
-	<div id="<%= dom_id brewery %>">
-	  	<p>
-		<%= link_to brewery.name, brewery %>, 
-	  
-		<strong>Year:</strong>
-		<%= brewery.year %>
-	  	</p>
+<div class="container">
+	<div class="col-sm-12 col-md-11 col-lg-9 col-xl-7">
+		<h3>Active</h3>
+		<p>Number of active breweries: <%= @active_breweries.count %></p>
+		<table class="table table-striped">
+			<thead>
+			<tr>
+				<th>Brewery</th>
+				<th>Year</th>
+			</tr>
+			</thead>
+			<tbody>
+				<% @active_breweries.order(year: :desc).each do |brewery| %>
+					<div id="<%= dom_id brewery %>">
+					<tr>
+						<td class="col-9"><%= link_to brewery.name, brewery %></td>
+						<td class="col-3"><%= brewery.year %></td>
+					</tr>
+					</div>
+				<% end%>
+			</tbody>
+		</table>
+
+<br>
+
+		<h3>Retired</h3>
+		<p> Number of retired breweries: <%= @retired_breweries.count %> </p>
+		<table class="table table-striped">
+			<thead>
+			<tr>
+				<th>Brewery</th>
+				<th>Year</th>
+			</tr>
+			</thead>
+			<tbody>
+				<% @retired_breweries.order(year: :desc).each do |brewery| %>
+					<div id="<%= dom_id brewery %>">
+					<tr>
+						<td class="col-9"><%= link_to brewery.name, brewery %></td>
+						<td class="col-3"><%= brewery.year %></td>
+					</tr>
+					</div>
+				<% end%>
+			</tbody>
+		</table>
 	</div>
-  <% end%>
 </div>
+
 <br>
 <p>
 	<% if current_user %>
-		<%=link_to("New brewery", new_brewery_path)%> | 
+		<%=link_to("New brewery", new_brewery_path, class:'btn btn-primary')%>
 	<% end %>
-	<%=link_to 'List of beers', beers_path %>
+	<%=link_to 'List of beers', beers_path, class:'btn btn-primary' %>
 </p>
