@@ -12,7 +12,7 @@ class RatingsController < ApplicationController
     @top_styles = Rails.cache.fetch("style top 3", expires_in: 5.minutes) { Style.top(3) }
     @active_users = Rails.cache.fetch("user top 3", expires_in: 5.minutes) { User.top(3) }
 
-    #CacheUpdate.perform_async
+    # CacheUpdate.perform_async
   end
 
   def new
