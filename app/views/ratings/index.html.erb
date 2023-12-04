@@ -50,25 +50,27 @@ Number of ratings: <%= @ratings.count %>
 <p>
 <h3>All ratings</h3>
 
+<% cache 'beers and ratings table', expires_in:10.minutes do %>
+
 <div class="container">
   <div class="col-sm-12 col-md-11 col-xl-10">
     <table class="table accordion table-striped table-hover">
-    <thead>
-      <tr>
-        <th>Beer</th>
-        <th>Ratings</th>
-        <th>Average</th>
-      </tr>
-    </thead>
-
-    <tbody>
+      <thead>
+        <tr>
+          <th>Beer</th>
+          <th>Ratings</th>
+          <th>Average</th>
+        </tr>
+      </thead>
+      <tbody>
+        
         <% i = 1%>
-        <% @beers.sort_by(&:average).reverse.each do |beer| %>
+        <% @beers_and_ratings.reverse.each do |beer| %>
           <tr data-bs-toggle="collapse" data-bs-target="#r<%= i %>" type="button">
 
               <td><%= beer.name %></td>
               <td><%= beer.ratings.count %></td>
-              <td><%= beer.average %></td>
+              <td><%= round(beer.average) %></td>
           </tr>
 
             <tr class="collapse accordion-collapse" id="r<%= i %>" data-bs-parent=".table">
@@ -83,12 +85,12 @@ Number of ratings: <%= @ratings.count %>
                     </tr>
                   </thead>
                   <tbody>
-                    <% @ratings.joins(:user).where(beer_id: beer.id).select('users.username', :score, :'ratings.created_at').sort_by(&:created_at).reverse.each do |rating| %>
+                    <% beer.ratings.sort_by(&:created_at).reverse.each do |rating| %>
                       <tr>
-                        <td class="col-5"><%= rating.username %></td>
+                        <td class="col-5"><%= rating.user.username %></td>
                         <td class="col-3"><%= rating.score %></td>
                         <td class="col-4"><%= rating.created_at.strftime("%d-%m-%Y %H:%M") %></td>
-                      </tr>
+                     </tr>
                     <% end %>
                   </tbody>
                 </table>
@@ -104,10 +106,13 @@ Number of ratings: <%= @ratings.count %>
           <th><%= @ratings.count %></th>
           <th><%= @ratings.average(:score) %></th>
         </tr>
-    </tbody>
+      
+      </tbody>
+    
     </table>
   </div>
 </div>
+<% end %>
 </p>
 
 

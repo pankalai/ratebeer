@@ -13,23 +13,41 @@
     <%= brewery.year %>
 	</i>
   </p>
-  
+
+<% cache @brewery do %>
   <p>
 	Number of beers: <%= @brewery.beers.count %>
   </p>
   
   <p>
-	 <% brewery.beers.each do |beer| %>
-	   <%= link_to beer.name, beer %>
-	 <% end %>
+  <table class="table table-striped table-hover">
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Style</th>
+        <th>Rating</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% brewery.beers.each do |beer| %>
+        <tr>
+          <td><%= link_to beer.name, beer %></td>
+          <td><%= link_to beer.style.name, beer.style %></td>
+          <td><%= round(beer.average) %></td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
   </p>
 
   <p>
   <% if brewery.ratings.empty? %>
   Brewery has not yet been rated!
   <% else %>
-  Brewery has <%= pluralize(brewery.ratings.count, "rating") %> with an average of <%= brewery.average_rating %>
+  Brewery has <%= pluralize(brewery.ratings.count, "rating") %> with an average of <%= round(brewery.average_rating) %>
   <% end %>
   </p>
-  
+
+<% end %>
+
 </div>

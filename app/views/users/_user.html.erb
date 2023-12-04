@@ -34,10 +34,33 @@
     <%= user.favorite_brewery.name unless user.favorite_brewery.nil? %>
   </p>
 
-  <p>
-  <strong>Clubs:</strong>
-  <%= user.beer_clubs.map { |c| c.name }.join(", ") %>
-  </p>
+  
+  <strong>Clubs:</strong><br>
+  <% m = user.memberships.joins(:beer_club).select{|m| m.confirmed}%>
+  <% if !m.empty? %>
+    Member of
+    <ul>
+    <% m.each do |m| %>
+      <li><%= link_to m.beer_club.name, m.beer_club %></li>
+    <% end %>
+    </ul>
+    <% end %>
+
+  
+  <% m = user.memberships.joins(:beer_club).select{|m| !m.confirmed}%>
+  <% if !m.empty? %>
+    Applied membership of
+    <ul>
+    <% m.each do |m| %>
+      <li><%= link_to m.beer_club.name, m.beer_club %></li>
+    <% end %>
+    </ul>
+  <% end %>
+
+
+  <%# <%= "Member of: #{user.memberships.joins(:beer_club).select{|m| m.confirmed}.map{|m| m.beer_club.name}.join(", ")}" %>
+
+
 
 
 

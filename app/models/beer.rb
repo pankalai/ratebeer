@@ -1,8 +1,9 @@
 class Beer < ApplicationRecord
   include RatingAverage
+  extend TopN
 
   belongs_to :style
-  belongs_to :brewery
+  belongs_to :brewery, touch: true
   has_many :ratings, dependent: :destroy
   has_many :raters, through: :ratings, source: :user
 
@@ -33,7 +34,7 @@ class Beer < ApplicationRecord
     ratings.map(&:score).sum / ratings.count.to_f
   end
 
-  def self.top(amount)
-    Beer.all.sort_by(&:average_rating).reverse.first(amount)
-  end
+  # def self.top(amount)
+  #   Beer.all.sort_by(&:average_rating).reverse.first(amount)
+  # end
 end

@@ -1,5 +1,6 @@
 class Brewery < ApplicationRecord
   include RatingAverage
+  extend TopN
 
   has_many :beers, dependent: :destroy
   has_many :ratings, through: :beers
@@ -30,7 +31,7 @@ class Brewery < ApplicationRecord
     puts "changed year to #{year}"
   end
 
-  def self.top(amount)
-    Brewery.all.sort_by(&:average_rating).reverse.first(amount)
-  end
+  # def self.top(amount)
+  #   Brewery.all.sort_by(&:average_rating).reverse.first(amount)
+  # end
 end

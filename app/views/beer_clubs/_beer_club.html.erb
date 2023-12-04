@@ -1,3 +1,4 @@
+
 <div id="<%= dom_id beer_club %>">
   <p>
     <strong>Name:</strong>
@@ -16,11 +17,18 @@
  
   <p>
     <strong>Members:</strong>
-      <% beer_club.members.each do |m| %>
+      <% beer_club.memberships.filter{|m| m.confirmed}.each do |m| %>
         <br>
-        <%= link_to m.username, m %>
+        <%= link_to m.user.username, m.user %>
       <% end %>
-
   </p>
- 
+  <p>
+    <strong>Membership applications:</strong>
+      <% beer_club.memberships.filter{|m| !m.confirmed}.each do |m| %>
+        <br>
+        <%= link_to m.user.username, m.user %> 
+        <%= (link_to "Confirm", toggle_confirmation_membership_path(m.id), data: {turbo_method: "post"}, class: "btn btn-primary") if current_user.memberships.filter{|m| m.confirmed}.map{|m| m.beer_club_id}.include? beer_club.id %>
+      <% end %>
+  </p>
+  
 </div>

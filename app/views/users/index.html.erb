@@ -1,14 +1,15 @@
 <h1>Users</h1>
 
+<% admin = current_user.try(:admin?) %>
 <div class="container">
 <div class="col-sm-12 col-md-11 col-lg-10 col-xl-8">
-<table class="table table-striped">
+<table class="table table-striped table-hover">
   <thead>
     <tr>
       <th>Username</th>
       <th>Ratings</th>
       <th>Average</th>
-      <% if current_user.admin %>
+      <% if admin %>
       <th></th>
       <% end %>
     </tr>
@@ -17,9 +18,9 @@
     <% @users.each do |user| %>
     <tr>
       <td class="col-6"><%= link_to user.username, user %></td>
-      <td class="col-3"><%= user.ratings.count %></td>
+      <td class="col-3"><%= user.ratings.size %></td>
       <td class="col-2"><%= round(user.average_rating) %></td>
-      <% if current_user.admin %>
+      <% if admin %>
         <td class="col-1">
         <% if user.closed %>
         <span class="badge bg-primary">closed</span>

@@ -28,7 +28,8 @@ class MembershipsController < ApplicationController
     respond_to do |format|
       if @membership.save
         # format.html { redirect_to membership_url(@membership), notice: "Membership was successfully created." }
-        format.html { redirect_to beer_club_url(@membership.beer_club), notice: "#{current_user.username} welcome to the club" }
+        # format.html { redirect_to beer_club_url(@membership.beer_club), notice: "#{current_user.username} welcome to the club" }
+        format.html { redirect_to beer_club_url(@membership.beer_club), notice: "Membership application received" }
         format.json { render :show, status: :created, location: @membership }
       else
         format.html { render :new, status: :unprocessable_entity }
@@ -58,6 +59,12 @@ class MembershipsController < ApplicationController
       format.html { redirect_to user_path(params[:user_id]), notice: "Membership in #{BeerClub.find_by(params[:beer_club_id] == :id).name} ended" }
       format.json { head :no_content }
     end
+  end
+
+  def toggle_confirmation
+    membership = Membership.find(params[:id])
+    membership.update_attribute :confirmed, true
+    redirect_to beer_club_path(membership.beer_club_id), notice: "#{membership.user.username} is now member"
   end
 
   private

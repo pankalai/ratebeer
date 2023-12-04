@@ -1,11 +1,18 @@
 class RatingsController < ApplicationController
+  before_action :clear_cache, only: [:create, :destroy]
+
   def index
+    # @ratings = Rating.includes(:beer, :user).all
     @ratings = Rating.all
-    @beers = Beer.all
-    @top_breweries = Brewery.top 3
-    @top_beers = Beer.top 3
-    @top_styles = Style.top 3
-    @active_users = User.top 3
+
+    # @beers_and_ratings = Beer.includes(:ratings).sort_by{|b| [b.average_rating, b.ratings.count]}
+    @beers_and_ratings = Rails.cache.fetch("beers and ratings") { Beer.includes(ratings: { user: [] }).sort_by{ |b| [b.average_rating, b.ratings.count] } }
+    @top_breweries = Rails.cache.fetch("brewery top 3") { Brewery.top(3) }
+    @top_beers = Rails.cache.fetch("beer top 3") { Beer.top(3) }
+    @top_styles = Rails.cache.fetch("style top 3") { Style.top(3) }
+    @active_users = Rails.cache.fetch("user top 3") { User.top(3) }
+
+    CacheUpdate.perform_async
   end
 
   def new
@@ -30,5 +37,9 @@ class RatingsController < ApplicationController
     rating = Rating.find(params[:id])
     rating.delete if current_user == rating.user
     redirect_to user_path(current_user)
+  end
+
+  def clear_cache
+    clear_brewery_cache
   end
 end

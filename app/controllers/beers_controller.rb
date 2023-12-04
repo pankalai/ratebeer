@@ -1,11 +1,36 @@
 class BeersController < ApplicationController
   before_action :set_beer, only: %i[show edit update destroy]
   before_action :set_breweries_and_styles_for_template, only: [:new, :edit]
-  before_action :ensure_that_signed_in, except: [:index, :show]
+  before_action :ensure_that_signed_in, except: [:index, :show, :list]
+  before_action :clear_cache, only: [:create, :update, :destroy]
+
+  def list
+  end
 
   # GET /beers or /beers.json
   def index
-    @beers = Beer.all
+    @order = params[:order] || 'name'
+    return if request.format.html? && fragment_exist?("beerlist-#{@order}")
+
+    @beers = Beer.includes(:brewery, :style, :ratings).all
+    # @beers = Beer.all
+
+    @beers =
+      case @order
+      when "name" then @beers.sort_by(&:name)
+      when "brewery" then @beers.sort_by { |b| b.brewery.name }
+      when "style" then @beers.sort_by { |b| b.style.name }
+      when "rating" then @beers.sort_by(&:average_rating).reverse
+      end
+
+    # # oluet nimen perusteella järjestettynä
+    # Beer.order(:name)
+
+    # # oluet panimoiden nimien perusteella järjestettynä
+    # Beer.includes(:brewery).order("breweries.name")
+
+    # # oluet tyylin nimien perusteella järjestettynä
+    # Beer.includes(:style).order("style.name")
   end
 
   # GET /beers/1 or /beers/1.json
@@ -82,5 +107,10 @@ class BeersController < ApplicationController
   # Only allow a list of trusted parameters through.
   def beer_params
     params.require(:beer).permit(:name, :style_id, :brewery_id)
+  end
+
+  def clear_cache
+    %w(beerlist-name beerlist-brewery beerlist-style beerlist-rating).each{ |f| expire_fragment(f) }
+    clear_brewery_cache
   end
 end
